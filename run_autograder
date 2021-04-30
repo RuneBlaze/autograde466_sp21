@@ -1,0 +1,11 @@
+#!/usr/bin/env ruby
+#coding:utf-8
+
+require 'json'
+require_relative 'autograder.rb'
+$root_tests = "/autograder/source"
+outpath = "/autograder/results/results.json"
+run_tests "/autograder/submission"
+File.open(outpath, "w+") do |f|
+    f.puts(JSON.generate($res))
+end

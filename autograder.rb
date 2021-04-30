@@ -204,7 +204,7 @@ end
 
 $root_tests = "/home/lbq/research/autograde466_sp21"
 def run_assembly assemblyf
-    POINTS = 12.5
+    points = 12.5
     aw = AssemblyWrapper.new(assemblyf, File.extname(assemblyf))
     print_header "assembly", aw.lang
     for i in 1..8
@@ -217,10 +217,10 @@ def run_assembly assemblyf
             "truth" => outputpath,
         }
         if !$?.success?
-            produce_test_crash POINTS, files
+            produce_test_crash points, files
             next
         end
-        produce_test_result score * POINTS, POINTS, files, output
+        produce_test_result score * points, points, files, output
     end
 end
 

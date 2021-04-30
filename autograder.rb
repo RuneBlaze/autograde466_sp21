@@ -77,9 +77,7 @@ class ExecutableWrapper
     attr_reader :lang
     def compile(fn, ext, executablename)
         @executablename = executablename
-        if File.exists?("Makefile")
-            return `make`
-        end
+        
         case ext
         when ".py"
             fl = File.open(fn, &:readline)
@@ -90,10 +88,18 @@ class ExecutableWrapper
             end
         when ".java"
             @lang = :java
-            `javac *.java`
+            if File.exists?("Makefile")
+                `make`
+            else
+                `javac *.java`
+            end
         when ".cpp"
             @lang = :cpp
-            `g++ -g -O2 -std=gnu++17 *.cpp -o #{executablename}`
+            if File.exists?("Makefile")
+                `make`
+            else
+                `g++ -g -O2 -std=gnu++17 *.cpp -o #{executablename}`
+            end
         end
     end
 

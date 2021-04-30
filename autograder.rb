@@ -64,6 +64,8 @@ def produce_test_result score, maxscore, files, output
     # buf << "\n"
     if score == maxscore
         io.puts "💯"
+    elsif score == 0
+        io.puts "⚠️ Scored 0 on this test case. Double check the behavior of your code."
     end
     tests << {
         name: "Test #{index}",
@@ -81,7 +83,7 @@ class ExecutableWrapper
         case ext
         when ".py"
             fl = File.open(fn, &:readline)
-            if fl.start_with?("#!") && fl.includes?("2.7")
+            if fl.start_with?("#!") && fl.include?("2.7")
                 @lang = :py2
             else
                 @lang = :py3
@@ -177,7 +179,7 @@ end
 
 def print_header topic, lang
     $output.puts " ✨ Autograder Started"
-    $output.puts "   The autograder does not support build tools currently."
+    $output.puts "   The autograder does not currently support build tools."
     $output.puts "   If you purposefully do not use the simplest project configuration, the autograder will not be that useful."
     $output.puts "   Ignore the autograder results if you do not conform to the standard project configuration or language."
     $output.puts "   See the Piazza post about the autograder for more information."
@@ -202,6 +204,7 @@ end
 
 $root_tests = "/home/lbq/research/autograde466_sp21"
 def run_assembly assemblyf
+    POINTS = 12.5
     aw = AssemblyWrapper.new(assemblyf, File.extname(assemblyf))
     print_header "assembly", aw.lang
     for i in 1..8
@@ -214,10 +217,10 @@ def run_assembly assemblyf
             "truth" => outputpath,
         }
         if !$?.success?
-            produce_test_crash 10, files
+            produce_test_crash POINTS, files
             next
         end
-        produce_test_result score * 10, 10, files, output
+        produce_test_result score * POINTS, POINTS, files, output
     end
 end
 
@@ -283,6 +286,9 @@ def run_tests root
             $output.puts caller
         rescue => e
             crash! "Autograder Crashed."
+            $output.puts "It could be that your code did not compile."
+            $output.puts "If there are no compilation errors in the autograder output,"
+            $output.puts "share the link to this page with me (baqiaol2@illinois.edu)."
             $output.puts e.message
             $output.puts caller
         else

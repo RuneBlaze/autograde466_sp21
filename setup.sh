@@ -1,7 +1,7 @@
 apt update
 apt-get -y install openjdk-11-jdk
-apt install ruby-full
-apt install build-essential
-apt install python2.7
-apt install python-pip
-pip install networkx
+apt install -y ruby-full
+apt install -y build-essential
+apt install -y python2.7
+apt install -y python-pip
+pip install -y networkx

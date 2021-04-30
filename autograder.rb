@@ -77,6 +77,9 @@ class ExecutableWrapper
     attr_reader :lang
     def compile(fn, ext, executablename)
         @executablename = executablename
+        if File.exists?("Makefile")
+            return `make`
+        end
         case ext
         when ".py"
             fl = File.open(fn, &:readline)
@@ -99,7 +102,7 @@ class ExecutableWrapper
         when :py2
             `python2.7 #{@executablename}.py #{argv.join(' ')}`
         when :py3
-            `python3 #{@executablename}.py #{argv.join(' ')}`
+            `python3.8 #{@executablename}.py #{argv.join(' ')}`
         when :java
             `java #{@executablename.capitalize} #{argv.join(' ')}`
         when :cpp
@@ -165,15 +168,25 @@ class BlastWrapper < ExecutableWrapper
     end
 end
 
+
 def print_header topic, lang
     $output.puts " ✨ Autograder Started"
+    $output.puts "   The autograder does not support build tools currently."
+    $output.puts "   If you purposefully do not use the simplest project configuration, the autograder will not be that useful."
+    $output.puts "   Ignore the autograder results if you do not conform to the standard project configuration or language."
+    $output.puts "   See the Piazza post about the autograder for more information."
+    $output.puts ""
+    $output.puts "   Assembly test cases: https://github.com/RuneBlaze/autograde466_sp21/tree/main/tests_assembly"
+    $output.puts "   BLAST test cases: https://github.com/RuneBlaze/autograde466_sp21/tree/main/tests_blast"
+    $output.puts "   The BLAST test cases can be overly stringent."
+    $output.puts "   If your output looks meaningful and correct under your parameters, don't worry about the scores."
     $output.puts ""
     $output.puts "   🧳 Project Option: #{topic}"
     $output.puts "   🌐 Project Language Adapter: #{lang}"
     $output.puts ""
     $output.puts " 🌎 Environment Configuration"
-    $output.puts "   #{`python2.7 --version`}"
-    $output.puts "   #{`python3 --version`}"
+    # $output.puts "   #{`python2.7 -c 'import sys; print(sys.version)'`}"
+    $output.puts "   #{`python3.8 --version`}"
     $output.puts "   #{`java -version`}"
     $output.puts "   #{`g++ --version | head -n 1`}"
     $output.puts "   NetworkX (pip2): #{`pip show networkx | grep Version: `}"
@@ -241,7 +254,11 @@ def run_tests root
         end
 
         if !assemblyf && !blastf
-            crash! "No valid entry point found under directory. \n#{Dir.glob('*').join('\n')}"
+            msg = "No valid entry point found under directory: \n#{Dir.glob('*').join('\n')}"
+            msg << "It could be that your project uses a different convention.\n"
+            msg << "If that is the case, as long as you documented how to run your code, your submission is entirely valid.\n"
+            msg << "(Just not checked by the autograder.)\n"
+            crash! msg
             return
         end
 

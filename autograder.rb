@@ -197,8 +197,8 @@ def print_header topic, lang
     $output.puts "   #{`python3.8 --version`}"
     $output.puts "   #{`java -version`}"
     $output.puts "   #{`g++ --version | head -n 1`}"
-    $output.puts "   NetworkX (pip2): #{`pip show networkx | grep Version: `}"
-    $output.puts "   NetworkX (pip3): #{`pip3 show networkx | grep Version: `}"
+    $output.puts "   NetworkX (pip2): #{`python2.7 -m pip show networkx | grep Version: `}"
+    $output.puts "   NetworkX (pip3): #{`python3.8 -m pip show networkx | grep Version: `}"
 end
 
 

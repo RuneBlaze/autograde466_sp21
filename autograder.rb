@@ -263,7 +263,7 @@ def run_tests root
         end
 
         if !assemblyf && !blastf
-            msg = "No valid entry point found under directory: \n#{Dir.glob('*').join('\n')}"
+            msg = "No valid entry point found under directory: \n#{Dir.glob('*').join('\n')}\n"
             msg << "It could be that your project uses a different convention.\n"
             msg << "If that is the case, as long as you documented how to run your code, your submission is entirely valid.\n"
             msg << "(Just not checked by the autograder.)\n"
